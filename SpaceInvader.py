@@ -33,6 +33,9 @@ while running:
 			if event.type == pygame.K_RIGHT or event.type == pygame.K_LEFT:
 				spaceshipX_change = 0
 
+	spaceshipX = 0 if spaceshipX < 0 else spaceshipX
+	spaceshipX = 686 if spaceshipX > 686 else spaceshipX
+
 	spaceshipX += spaceshipX_change
 	spaceship(spaceshipX, spaceshipY)
 	pygame.display.update()
