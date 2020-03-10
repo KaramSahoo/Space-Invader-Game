@@ -1,4 +1,5 @@
 import pygame
+import math
 import random
 pygame.init()
 
@@ -27,6 +28,8 @@ bulletX_change = 0
 bulletY_change = 10
 bullet_state = "ready"
 
+score = 0
+
 def spaceship(x, y):
 	win.blit(spaceshipImg, (x, y))
 
@@ -38,6 +41,12 @@ def fire_bullet(x, y):
 	bullet_state = "fire"
 	win.blit(bulletImg, (x+16, y+10))
 
+def is_collision(enemyX, enemyY, bulletX, bulletY):
+	proximity = math.sqrt(math.pow(enemyX-bulletX, 2) + math.pow(enemyY-bulletY, 2))
+	if proximity < 29:
+		return True
+	return False
+
 running = True
 while running:
 	win.blit(background, (0, 0))
@@ -47,9 +56,9 @@ while running:
 		
 		if event.type == pygame.KEYDOWN:
 			if event.key == pygame.K_LEFT:
-				spaceshipX_change = -2
+				spaceshipX_change = -2.5
 			if event.key == pygame.K_RIGHT:
-				spaceshipX_change = 2
+				spaceshipX_change = 2.5
 			if event.key == pygame.K_SPACE:
 				if bullet_state is "ready":
 					bulletX = spaceshipX
@@ -79,6 +88,14 @@ while running:
 		fire_bullet(bulletX, bulletY)
 		bulletY -= bulletY_change
 	
+	collision = is_collision(enemyX, enemyY, bulletX, bulletY)
+	if collision is True:
+		bulletY = 380
+		bullet_state = "ready"
+		score += 1
+		enemyX = random.randint(0, 686)
+		enemyY = random.randint(50, 150)
+
 	enemy(enemyX, enemyY)
 	spaceship(spaceshipX, spaceshipY)
 	pygame.display.update()
