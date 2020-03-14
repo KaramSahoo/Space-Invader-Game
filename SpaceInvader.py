@@ -36,7 +36,12 @@ bulletX_change = 0
 bulletY_change = 10
 bullet_state = "ready"
 
-score = 0
+score_val = 0
+font = pygame.font.Font("freesansbold.ttf", 16)
+
+def display_score(x, y):
+	score = font.render("Score :" + str(score_val), True, (255,255,255))
+	win.blit(score, (x, y))
 
 def spaceship(x, y):
 	win.blit(spaceshipImg, (x, y))
@@ -94,7 +99,7 @@ while running:
 		if collision is True:
 			bulletY = 380
 			bullet_state = "ready"
-			score += 1
+			score_val += 1
 			enemyX[i] = random.randint(0, 686)
 			enemyY[i] = random.randint(50, 150)
 
@@ -108,4 +113,5 @@ while running:
 		bulletY -= bulletY_change
 
 	spaceship(spaceshipX, spaceshipY)
+	display_score(10, 10)
 	pygame.display.update()
