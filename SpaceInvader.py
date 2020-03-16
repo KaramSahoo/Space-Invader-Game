@@ -1,6 +1,8 @@
 import pygame
 import math
 import random
+from pygame import mixer
+
 pygame.init()
 
 win = pygame.display.set_mode((750, 500))
@@ -10,6 +12,11 @@ pygame.display.set_icon(icon)
 
 background = pygame.image.load("background.png")
 
+mixer.music.load("background.wav")
+mixer.music.play(-1)
+explosion_sound = mixer.Sound("explosion.wav")
+bullet_sound = mixer.Sound("bullet_sound.wav")
+					
 spaceshipImg = pygame.image.load("spaceship.png")
 spaceshipX = 343
 spaceshipY = 380
@@ -37,10 +44,10 @@ bulletY_change = 10
 bullet_state = "ready"
 
 score_val = 0
-font = pygame.font.Font("freesansbold.ttf", 16)
+font = pygame.font.Font("ARCADECLASSIC.ttf", 16)
 
 def display_score(x, y):
-	score = font.render("Score :" + str(score_val), True, (255,255,255))
+	score = font.render("Score " + str(score_val), True, (255,255,255))
 	win.blit(score, (x, y))
 
 def spaceship(x, y):
@@ -74,6 +81,7 @@ while running:
 				spaceshipX_change = 2.5
 			if event.key == pygame.K_SPACE:
 				if bullet_state is "ready":
+					bullet_sound.play()
 					bulletX = spaceshipX
 					fire_bullet(bulletX, bulletY)
 		if event.type == pygame.KEYUP:
@@ -89,14 +97,15 @@ while running:
 		
 		enemyX[i] += enemyX_change[i]
 		if enemyX[i] < 0:
-			enemyX_change[i] = 2
+			enemyX_change[i] = 2 + (score_val*0.1)
 			enemyY[i] += enemyY_change[i]
 		elif enemyX[i] > 686:
-			enemyX_change[i] = -2
+			enemyX_change[i] = -2 - (score_val*0.1)
 			enemyY[i] += enemyY_change[i]
 		
 		collision = is_collision(enemyX[i], enemyY[i], bulletX, bulletY)
 		if collision is True:
+			explosion_sound.play()
 			bulletY = 380
 			bullet_state = "ready"
 			score_val += 1
